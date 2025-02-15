@@ -1,6 +1,4 @@
 import axios from 'axios';
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
 import { hideLoader, showLoader } from './render-functions';
 
 export function fetchImages(query) {
