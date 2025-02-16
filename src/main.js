@@ -1,28 +1,23 @@
 import { fetchImages } from './js/pixabay-api.js';
 import { renderImages, clearGallery, showNoResultsMessage, showError } from './js/render-functions.js';
 
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
-
 import "./css/loader.css";
 
-document.querySelector(".search-form").addEventListener("submit", function (event) {
+document.querySelector(".search-form").addEventListener("submit", event => {
     event.preventDefault();
 
-    let searchInput = document.querySelector(".search-input").value.trim();
+    const searchInputElement = document.querySelector(".search-input");
+    const searchInputValue = searchInputElement.value.trim();
 
-    if (searchInput === "") {
-        iziToast.error({
-            title: 'Error',
-            message: 'Please enter a search query!',
-            position: 'topRight'
-        });
+    if (searchInputValue === "") {
+        showError("Please enter a search query!");
+        searchInputElement.value = "";
         return;
     }
 
     clearGallery();
 
-    fetchImages(searchInput)
+    fetchImages(searchInputValue)
         .then(hits => {
             if (hits.length === 0) {
                 showNoResultsMessage();
@@ -30,8 +25,7 @@ document.querySelector(".search-form").addEventListener("submit", function (even
                 renderImages(hits);
             }
         })
-        .catch(error => {
-            clearGallery();
-            showError("There was an error while fetching images. Please try again later.");
-        });
+        .finally(() => {
+        searchInputElement.value = ""; 
+    })
 });

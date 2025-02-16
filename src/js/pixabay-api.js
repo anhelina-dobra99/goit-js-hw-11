@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { hideLoader, showLoader } from './render-functions';
+import { hideLoader, showLoader, showError, showNoResultsMessage } from './render-functions';
 
 export function fetchImages(query) {
     showLoader();
@@ -14,21 +14,11 @@ export function fetchImages(query) {
     })
         .then(response => {
             const data = response.data;
-            if (data.hits.length === 0) {
-                iziToast.error({
-                    title: 'Oops!',
-                    message: "Sorry, there are no images matching your search query. Please try again!",
-                });
-                return [];
-            }
             return data.hits;
         })
         .catch(error => {
             console.error("Error fetching images:", error);
-            iziToast.error({
-                title: 'Error!',
-                message: "There was an error while fetching images. Please try again later.",
-            });
+            showError("There was an error while fetching images. Please try again later.");
             return [];
         })
         .finally(() => {
